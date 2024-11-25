@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as SwitchPrimitives from "@radix-ui/react-switch"
-import { cn } from "@/lib/utils"
+import * as React from "react";
+import * as SwitchPrimitives from "@radix-ui/react-switch";
+import { cn } from "@/lib/utils";
 
 const Switch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
@@ -24,15 +24,17 @@ const Switch = React.forwardRef<
       >
         {/* Render different images depending on the checked state */}
         <img
-          src={props.checked ? "/assets/icons/moon.png" : "/assets/icons/sun.png"}
+          src={
+            props.checked ? "/assets/icons/moon.png" : "/assets/icons/sun.png"
+          }
           alt="Toggle Image"
           className="h-full w-full object-contain"
         />
       </SwitchPrimitives.Thumb>
     </SwitchPrimitives.Root>
-  )
-})
+  );
+});
 
-Switch.displayName = SwitchPrimitives.Root.displayName
+Switch.displayName = SwitchPrimitives.Root.displayName;
 
-export { Switch }
+export { Switch };

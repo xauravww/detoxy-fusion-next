@@ -1,31 +1,15 @@
 "use client"
-import { useState, useEffect } from "react";
+
 import clsx from "clsx";
-import AuthForm from "@/components/AuthForm";
-import { Switch } from "@/components/ui/switch"
+import AuthForm from "@/app/components/AuthForm";
+import { Switch } from "@/app/components/ui/switch"
+import useDarkMode from "@/hooks/use-darkmode";
+
 
 export default function Home() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useEffect(() => {
-    // Check if the user prefers dark mode
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setIsDarkMode(prefersDark);
-
-    // Apply dark mode class to the body
-    if (prefersDark) {
-      document.body.classList.add("dark");
-    } else {
-      document.body.classList.remove("dark");
-    }
-  }, []);
-
-  // Toggle dark mode
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    document.body.classList.toggle("dark", !isDarkMode);
-  };
-
+  const [isDarkMode, setIsDarkMode] = useDarkMode()
+  console.log(isDarkMode)
+  console.log(setIsDarkMode)
   return (
     <div
       className={clsx(
