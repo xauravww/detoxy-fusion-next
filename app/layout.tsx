@@ -14,12 +14,25 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [isDarkMode, setIsDarkMode,handlePreferDark,handleThemeLocalStorage] = useDarkMode();
+   const { isDarkMode, isLoading, handlePreferDark, handleThemeCookie } = useDarkMode();
+
+  if (isLoading) {
+    return (
+      <html lang="en" suppressHydrationWarning>
+      <body>
+      <div className="shimmer-loader">
+        {/* Your shimmer or loading spinner here */}
+        <div className="shimmer"></div>
+      </div>
+      </body>
+      </html>
+    );
+  }
 
   
   return (
-    <html lang="en">
-      <body className={``}>
+    <html lang="en" suppressHydrationWarning>
+      <body>
         <Provider store={makeStore()}>
           <div className="relative">
             {children}
@@ -28,7 +41,7 @@ export default function RootLayout({
               <Switch
                 checked={isDarkMode}
                 onCheckedChange={() => {
-                  handleThemeLocalStorage()
+                  handleThemeCookie()
                 }}
                 
               />

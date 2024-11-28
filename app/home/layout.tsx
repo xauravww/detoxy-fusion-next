@@ -20,7 +20,7 @@ export default function RootLayout({
    
        <SidebarProvider>
       <AppSidebar />
-      <main className="flex w-full">
+      <main className="flex w-full bg-indigo-500 dark:bg-gray-800">
         <SidebarTrigger />
        <div className="flex-grow">
        {children}

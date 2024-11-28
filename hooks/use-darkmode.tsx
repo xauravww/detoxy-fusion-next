@@ -1,42 +1,63 @@
-
+"use client";
 import { useState, useEffect } from "react";
+import { parseCookies, setCookie } from "nookies";
 
-function useDarkMode():any{
-    
-    const [isDarkMode, setIsDarkMode] = useState(false);
-
-    
-
-    const handlePreferDark =  ()=>{
-      // Check if the user prefers dark mode
-      console.log("Dark Mode prefer system")
+function useDarkMode(): any {
+  const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null); // Initially null to represent loading state
+  const [isLoading, setIsLoading] = useState(true); // Track loading state for shimmer effect
+console.log("window avaialable:",typeof window)
+  useEffect(() => {
+    const loadDarkMode = async () => {
+      const cookies = parseCookies();
+      const darkModeInCookie = cookies.theme === "dark";
       const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      setIsDarkMode(prefersDark);
-  
-      // Apply dark mode class to the body
-      if (prefersDark) {
+      
+      // Set dark mode based on cookie, falling back to system preference
+      // const theme = darkModeInCookie ? "dark" : prefersDark ? "dark" : "light";
+      const theme = darkModeInCookie ?  "dark" : "light";
+      setIsDarkMode(theme === "dark");
+
+      // Set the body class accordingly
+      if (theme === "dark") {
         document.body.classList.add("dark");
       } else {
         document.body.classList.remove("dark");
       }
-    }
-    
-    const handleThemeLocalStorage= ()=>{
-          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-          if (localStorage.getItem("theme") == "dark") {
-            localStorage.setItem("theme", "light");
-            document.body.classList.remove("dark");
-            setIsDarkMode(false);
-          } else {
-            localStorage.setItem("theme", "dark");
-            document.body.classList.add("dark");
-            setIsDarkMode(true);
-          }
-    }
-  
+      
+      setIsLoading(false); // Once theme is set, stop loading
+    };
 
+    loadDarkMode();
+  }, []);
 
-  return [isDarkMode, setIsDarkMode,handlePreferDark ,handleThemeLocalStorage];
-};
+  const handleThemeCookie = () => {
+    const newTheme = isDarkMode ? "light" : "dark";
+    setCookie(null, "theme", newTheme, {
+      maxAge: 100 * 365 * 24 * 60 * 60,
+      path: "/",
+    });
+
+    if (newTheme === "dark") {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+
+    setIsDarkMode(!isDarkMode);
+  };
+
+  const handlePreferDark = () => {
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setIsDarkMode(prefersDark);
+
+    if (prefersDark) {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+  };
+
+  return { isDarkMode, isLoading, handlePreferDark, handleThemeCookie };
+}
 
 export default useDarkMode;

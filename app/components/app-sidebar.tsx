@@ -60,7 +60,7 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link href={item.url} onClick={()=>setChecked(item.title)} className={clsx({"bg-gray-200 hover:bg-gray-200":checked==item.title})}  >
+                    <Link href={item.url} onClick={()=>setChecked(item.title)} className={clsx({"bg-black dark:bg-gray-200 text-white hover:bg-black hover:text-white dark:hover:bg-gray-200 dark:text-black":checked==item.title})}  >
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>

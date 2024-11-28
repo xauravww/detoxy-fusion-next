@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 
 import * as React from "react"
@@ -10,8 +11,10 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/app/components/ui/button"
 import { Input } from "@/app/components/ui/input"
 import { Separator } from "@/app/components/ui/separator"
-import { Sheet, SheetContent } from "@/app/components/ui/sheet"
+import { Sheet, SheetContent,SheetTitle } from "@/app/components/ui/sheet"
 import { Skeleton } from "@/app/components/ui/skeleton"
+import { LucideHam ,PanelRightOpen ,PanelRightClose} from "lucide-react"
+
 import {
   Tooltip,
   TooltipContent,
@@ -195,6 +198,8 @@ const Sidebar = React.forwardRef<
     if (isMobile) {
       return (
         <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
+            <SheetTitle className="hidden">
+            </SheetTitle>
           <SheetContent
             data-sidebar="sidebar"
             data-mobile="true"
@@ -206,6 +211,7 @@ const Sidebar = React.forwardRef<
             }
             side={side}
           >
+            
             <div className="flex h-full w-full flex-col">{children}</div>
           </SheetContent>
         </Sheet>
@@ -263,7 +269,7 @@ const SidebarTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentProps<typeof Button>
 >(({ className, onClick, ...props }, ref) => {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar, open } = useSidebar()
 
   return (
     <Button
@@ -271,19 +277,36 @@ const SidebarTrigger = React.forwardRef<
       data-sidebar="trigger"
       variant="ghost"
       size="icon"
-      className={cn("h-7 w-7", className)}
+      className="h-8 w-8 hover:bg-transparent mx-4 mt-8" // Set button size
       onClick={(event) => {
         onClick?.(event)
         toggleSidebar()
       }}
       {...props}
     >
-      <PanelLeft />
+      {/* Use img tag with Tailwind CSS classes for size */}
+      {!open ? (
+        <img
+          src="/assets/icons/panel-right-open.svg" // Replace with the actual path to the open icon image
+          alt="Open Sidebar"
+          className="w-8 h-8" // Tailwind CSS for size, adjust as necessary
+          style={{filter: "invert(100%) sepia(3%) saturate(13%) hue-rotate(81deg) brightness(102%) contrast(101%)"}}
+        />
+      ) : (
+        <img
+          src="/assets/icons/panel-right-close.svg" // Replace with the actual path to the close icon image
+          alt="Close Sidebar"
+          className="w-10 h-10" // Tailwind CSS for size, adjust as necessary
+          style={{filter: "invert(100%) sepia(3%) saturate(13%) hue-rotate(81deg) brightness(102%) contrast(101%)"}}
+        />
+      )}
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )
 })
+
 SidebarTrigger.displayName = "SidebarTrigger"
+
 
 const SidebarRail = React.forwardRef<
   HTMLButtonElement,
@@ -404,7 +427,7 @@ const SidebarContent = React.forwardRef<
       ref={ref}
       data-sidebar="content"
       className={cn(
-        "flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
+        "flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon] dark:bg-black dark:text-gray-100 :overflow-hidden",
         className
       )}
       {...props}
@@ -516,7 +539,7 @@ const sidebarMenuButtonVariants = cva(
   {
     variants: {
       variant: {
-        default: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+        default: "hover:bg-sidebar-accent hover:text-white hover:bg-black hover:dark:bg-white hover:dark:text-black",
         outline:
           "bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]",
       },
